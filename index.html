@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#080d1a">
+<meta name="description" content="Ad-free GPS photo tagging. Photos are processed on your device.">
+<title>GPS Photo Tagger</title>
+<style>
+:root{color-scheme:dark;--bg:#080d1a;--panel:rgba(15,23,42,.88);--mint:#2dd4bf;--teal:#14b8a6;--text:#f8fafc;--muted:#a8b6c9;--border:rgba(45,212,191,.2);--danger:#fda4af;--amber:#fcd34d}
+*{box-sizing:border-box}html{min-height:100%;background:var(--bg)}body{margin:0;min-height:100vh;color:var(--text);font:16px/1.45 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(ellipse at 90% -10%,#16434a 0,transparent 40%),linear-gradient(150deg,#080d1a,#0f172a 72%);padding-bottom:calc(105px + env(safe-area-inset-bottom))}
+button,input{font:inherit}button{touch-action:manipulation;cursor:pointer}button:focus-visible{outline:3px solid var(--mint);outline-offset:3px}.app{width:min(720px,100%);margin:auto;padding:22px 16px 28px}.header{padding:8px 2px 20px}.kicker{font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;font-weight:800;color:var(--mint)}h1{font-size:clamp(1.8rem,7vw,2.35rem);line-height:1.1;margin:7px 0}.subtitle{margin:9px 0 0;color:#c3d0df;font-size:.92rem}
+.card{padding:17px;margin-bottom:14px;border:1px solid var(--border);border-radius:20px;background:var(--panel);box-shadow:0 15px 35px #0002;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}.card h2{font-size:1rem;margin:0 0 13px;display:flex;align-items:center;gap:8px}.card h2:before{content:"";width:4px;height:17px;background:var(--mint);border-radius:5px}
+.button{display:flex;justify-content:center;align-items:center;gap:8px;min-height:50px;padding:12px 14px;border:0;border-radius:14px;font-weight:800;text-align:center;transition:transform .12s,opacity .12s}.button:active{transform:scale(.985)}.button:disabled{opacity:.42;cursor:not-allowed}.primary{color:#03211e;background:linear-gradient(135deg,#5eead4,#14b8a6);box-shadow:0 7px 22px #14b8a633}.secondary{background:#1e293b;border:1px solid #475569;color:#f1f5f9}.ghost{background:transparent;border:1px solid #2dd4bf77;color:var(--mint)}.main-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px}.main-actions .button:first-child{grid-column:1/-1}
+.status{display:inline-flex;align-items:center;gap:7px;border:1px solid #ffffff20;border-radius:999px;padding:7px 10px;font-size:.78rem;font-weight:750;background:#ffffff08;color:#dbeafe}.status.good{color:#6ee7b7;border-color:#34d39966}.status.mid{color:var(--amber);border-color:#fbbf2466}.status.bad{color:var(--danger);border-color:#fb718566}.statusrow{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:13px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.metric{min-width:0;background:#02061770;border:1px solid #ffffff0c;border-radius:13px;padding:11px}.metric span{display:block;font-size:.74rem;color:var(--muted)}.metric strong{display:block;margin-top:3px;font-size:.94rem;overflow-wrap:anywhere}.hint{color:var(--muted);font-size:.8rem;margin:11px 0 0}.warning{display:none;margin-top:10px;padding:10px 12px;border:1px solid #fbbf2466;background:#78350f30;border-radius:12px;color:#fde68a;font-size:.82rem}.warning.show{display:block}.spinner{display:inline-block;width:12px;height:12px;border:2px solid #ffffff45;border-top-color:var(--mint);border-radius:50%;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+.preview{position:relative;min-height:140px;display:grid;place-items:center;overflow:hidden;border:1px solid #ffffff14;border-radius:15px;background:#020617}.preview img{display:block;width:100%;height:auto;max-height:65vh;object-fit:contain}.placeholder{text-align:center;padding:26px 15px;color:var(--muted)}.placeholder .emoji{font-size:2.5rem;display:block;margin-bottom:8px}.preview-label{position:absolute;top:9px;left:9px;border:1px solid var(--border);background:#020617d9;color:var(--mint);border-radius:8px;padding:5px 8px;font-size:.7rem;font-weight:800}
+.sticky{position:fixed;z-index:10;bottom:0;left:0;right:0;padding:11px 14px calc(11px + env(safe-area-inset-bottom));background:#08101df0;border-top:1px solid #2dd4bf30;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}.sticky-inner{width:min(720px,100%);margin:auto;display:grid;grid-template-columns:1fr 1fr;gap:8px}.sticky-inner .button{min-height:49px}.sticky-inner .button:first-child{grid-column:1/-1}.toast{display:none;position:fixed;z-index:30;left:50%;bottom:calc(120px + env(safe-area-inset-bottom));transform:translateX(-50%);width:min(92vw,480px);padding:12px 15px;border-radius:13px;background:#e2e8f0;color:#0f172a;font-weight:650;box-shadow:0 8px 28px #0006}.toast.show{display:block;animation:pop .16s ease-out}@keyframes pop{from{opacity:0;transform:translate(-50%,7px)}to{opacity:1;transform:translate(-50%,0)}}footer{text-align:center;color:#8394ab;font-size:.75rem;padding:10px 0 0}
+@media(min-width:560px){.app{padding-top:30px}.grid{grid-template-columns:repeat(3,1fr)}.sticky-inner{grid-template-columns:1fr 1fr 1fr}.sticky-inner .button:first-child{grid-column:auto}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition:none!important}}
+</style>
+</head>
+<body>
+<main class="app">
+<header class="header"><div class="kicker">Private · On-device processing</div><h1>GPS Photo Tagger</h1><p class="subtitle">📍 Clear GPS tags · 🏠 Area name · Save photo</p></header>
+
+<section class="card" aria-labelledby="gpsHeading">
+<h2 id="gpsHeading">📍 GPS location</h2>
+<div class="statusrow"><span id="gpsStatus" class="status bad"><span class="spinner"></span> Waiting for GPS</span><span id="areaStatus" class="status">🏠 Area not resolved</span></div>
+<div class="grid">
+<div class="metric"><span>Latitude</span><strong id="latitude">—</strong></div>
+<div class="metric"><span>Longitude</span><strong id="longitude">—</strong></div>
+<div class="metric"><span>Accuracy</span><strong id="accuracy">Not acquired</strong></div>
+<div class="metric"><span>Area / locality</span><strong id="area">Not available yet</strong></div>
+<div class="metric"><span>Photo capture time</span><strong id="captured">No photo yet</strong></div>
+</div>
+<div id="gpsWarning" class="warning" role="status"></div>
+<p class="hint">Location is requested when you tap Get GPS Location or Take Photo. If GPS fails, the app will never invent coordinates.</p>
+<div style="margin-top:12px"><button class="button secondary" id="getGps" type="button">📍 Get GPS Location</button></div>
+</section>
+
+<section class="card" aria-labelledby="photoHeading">
+<h2 id="photoHeading">📷 Photograph</h2>
+<input id="photoInput" type="file" accept="image/*" capture="environment" hidden>
+<div id="preview" class="preview"><div class="placeholder"><span class="emoji">📷</span><strong>No photograph selected</strong><p class="hint">Take a new photo or choose an existing image from your device.</p><button id="chooseExisting" class="button ghost" type="button" style="margin:12px auto 0">Choose Existing Photo</button></div></div>
+<div id="photoWarning" class="warning" role="status"></div>
+<p class="hint">The watermark is rendered onto the exported image. Your photo is processed on this device and is never uploaded.</p>
+</section>
+<footer>Ad-free · Photos are processed on your device</footer>
+</main>
+
+<div class="sticky"><div class="sticky-inner">
+<button id="takePhoto" class="button primary" type="button">📷 Take Photo</button>
+<button id="savePhoto" class="button secondary" type="button" disabled>⬇️ Save Tagged Photo</button>
+<button id="takeAnother" class="button secondary" type="button" disabled>📷 Take Another Photo</button>
+</div></div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script>
+(() => {
+'use strict';
+const $ = id => document.getElementById(id);
+const input = $('photoInput');
+const state = { position:null, area:null, areaUnavailable:false, captureTime:null, sourceUrl:null, busy:false, lastAction:0 };
+let toastTimer;
+function notify(message,ms=4000){const el=$('toast');el.textContent=message;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),ms);}
+function vibrate(){try{navigator.vibrate?.(25);}catch(_){}}
+function warning(el,msg){el.textContent=msg;el.classList.toggle('show',Boolean(msg));}
+function timestamp(date){const p=n=>String(n).padStart(2,'0');return `${p(date.getDate())}/${p(date.getMonth()+1)}/${date.getFullYear()}, ${p(date.getHours())}:${p(date.getMinutes())}:${p(date.getSeconds())}`;}
+function filenamePart(s){return String(s||'').normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9_-]+/g,'_').replace(/^_+|_+$/g,'').slice(0,55);}
+function filename(date,area){const p=n=>String(n).padStart(2,'0');const place=filenamePart(area?.split(',')[0])||'Location_Unavailable';return `GPS_Photo_${place}_${date.getFullYear()}${p(date.getMonth()+1)}${p(date.getDate())}_${p(date.getHours())}${p(date.getMinutes())}${p(date.getSeconds())}.jpg`;}
+function setGpsStatus(kind,text){$('gpsStatus').className='status '+kind;$('gpsStatus').textContent=text;}
+function renderPosition(pos){
+  state.position=pos;const c=pos.coords;
+  $('latitude').textContent=c.latitude.toFixed(6);$('longitude').textContent=c.longitude.toFixed(6);
+  $('accuracy').textContent=Number.isFinite(c.accuracy)?`±${Math.round(c.accuracy)} m`:'Accuracy unavailable';
+  setGpsStatus(c.accuracy<15?'good':c.accuracy<=40?'mid':'bad',`${c.accuracy<15?'🟢':c.accuracy<=40?'🟡':'🔴'} GPS fix · ±${Math.round(c.accuracy)} m`);
+  warning($('gpsWarning'),'');
+  lookupArea(pos);
+}
+function getGps(){
+  if(!navigator.geolocation){setGpsStatus('bad','🔴 GPS not supported');warning($('gpsWarning'),'This browser does not support geolocation. You can still take a photo, but it will be clearly marked as not GPS-tagged.');return;}
+  setGpsStatus('bad','⏳ Acquiring GPS…');$('accuracy').innerHTML='<span class="spinner"></span> Waiting';warning($('gpsWarning'),'');
+  navigator.geolocation.getCurrentPosition(renderPosition,err=>{
+    state.position=null;$('latitude').textContent='—';$('longitude').textContent='—';$('accuracy').textContent='Not acquired';
+    setGpsStatus('bad','🔴 GPS unavailable');
+    const messages={1:'Location permission was denied. Allow location access in your browser settings and try again.',2:'Your position could not be determined. Try outdoors or near a window.',3:'GPS request timed out. Try Get GPS Location again.'};
+    warning($('gpsWarning'),messages[err.code]||'GPS could not be acquired. Coordinates will not be printed as if valid.');
+  },{enableHighAccuracy:true,timeout:15000,maximumAge:3000});
+}
+async function lookupArea(pos){
+  state.area=null;state.areaUnavailable=false;$('area').textContent='Resolving area…';$('areaStatus').textContent='🏠 Looking up area…';
+  if(!navigator.onLine){areaFailed();return;}
+  const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),9000);
+  try{
+    const c=pos.coords;
+    const url=`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${encodeURIComponent(c.latitude)}&longitude=${encodeURIComponent(c.longitude)}&localityLanguage=en`;
+    const response=await fetch(url,{signal:controller.signal,cache:'no-store'});if(!response.ok)throw new Error('lookup');
+    const d=await response.json();
+    const admin=Array.isArray(d.localityInfo?.administrative)?d.localityInfo.administrative:[];
+    const candidates=[d.locality,d.city,d.localityInfo?.informative?.find(x=>/village|town|city/i.test(x.description||x.name||''))?.name,admin.find(x=>x.adminLevel===6)?.name,d.principalSubdivision,d.countryName];
+    const seen=new Set();const parts=candidates.map(v=>(typeof v==='string'?v.trim():'')).filter(v=>v&&!seen.has(v.toLowerCase())&&seen.add(v.toLowerCase()));
+    if(!parts.length)throw new Error('empty');
+    state.area=parts.join(', ');$('area').textContent=state.area;$('areaStatus').className='status good';$('areaStatus').textContent='🏠 Area found';
+  }catch(_){areaFailed();}finally{clearTimeout(timer);}
+}
+function areaFailed(){state.area=null;state.areaUnavailable=true;$('area').textContent='Area name unavailable';$('areaStatus').className='status mid';$('areaStatus').textContent='🏠 Lookup unavailable';}
+function renderPreview(url){
+  const box=$('preview');box.replaceChildren();const img=new Image();img.src=url;img.alt='Selected photograph preview';box.appendChild(img);
+  const badge=document.createElement('span');badge.className='preview-label';badge.textContent='PHOTO PREVIEW';box.appendChild(badge);
+  $('savePhoto').disabled=false;$('takeAnother').disabled=false;
+}
+function releaseSource(){if(state.sourceUrl){URL.revokeObjectURL(state.sourceUrl);state.sourceUrl=null;}}
+function clearPhoto(){releaseSource();state.captureTime=null;$('captured').textContent='No photo yet';$('savePhoto').disabled=true;$('takeAnother').disabled=true;warning($('photoWarning'),'');$('preview').innerHTML='<div class="placeholder"><span class="emoji">📷</span><strong>No photograph selected</strong><p class="hint">Take a new photo or choose an existing image from your device.</p><button id="chooseExisting" class="button ghost" type="button" style="margin:12px auto 0">Choose Existing Photo</button></div>';$('chooseExisting').addEventListener('click',()=>input.click());}
+function onFile(file){
+  if(!file)return;if(!file.type.startsWith('image/')){warning($('photoWarning'),'Please select a valid image file.');return;}
+  releaseSource();state.sourceUrl=URL.createObjectURL(file);state.captureTime=new Date();$('captured').textContent=timestamp(state.captureTime);renderPreview(state.sourceUrl);warning($('photoWarning'),'');
+  // Ask for a current GPS fix on photo selection, but don't block photo preview.
+  getGps();notify('Photo ready. GPS tagging will be included only if a real location fix is available.');
+}
+function wrapLines(ctx,text,maxWidth){const words=String(text).split(/\s+/);const lines=[];let line='';for(const word of words){const test=line?line+' '+word:word;if(ctx.measureText(test).width>maxWidth&&line){lines.push(line);line=word;}else line=test;}if(line)lines.push(line);return lines;}
+function drawWatermark(ctx,w,h){
+  const small=Math.min(w,h),pad=Math.max(12,small*.024),body=Math.max(13,small*.031),head=Math.max(17,small*.046),maxW=w-pad*2;
+  const rows=[{text:'📍 GPS PHOTO',size:head,color:'#5eead4',bold:true}];
+  if(state.position){
+    const c=state.position.coords;
+    rows.push({text:`🧭 GPS: ${c.latitude.toFixed(6)}, ${c.longitude.toFixed(6)}`,size:body,bold:true});
+    rows.push({text:`🎯 Accuracy: ±${Math.round(c.accuracy)} m`,size:body,bold:true});
+  }else{
+    rows.push({text:'🧭 GPS: Location unavailable',size:body,bold:true});
+    rows.push({text:'⚠️ NOT GPS-TAGGED',size:body,color:'#fda4af',bold:true});
+  }
+  rows.push({text:`🏠 Location: ${state.area||'Area name unavailable'}`,size:body,bold:true});
+  rows.push({text:`🕒 Captured: ${timestamp(state.captureTime||new Date())}`,size:body,bold:true});
+  const gap=Math.max(4,body*.16),top=pad*.7,bottom=pad*1.3;
+  let needed=top+bottom;
+  const measured=rows.map(row=>{ctx.font=`${row.bold?'750':'500'} ${row.size}px system-ui, sans-serif`;const lines=wrapLines(ctx,row.text,maxW);const lineHeight=row.size*1.3;needed+=lines.length*lineHeight+gap;return {...row,lines,lineHeight};});
+  // If the image is unusually short, scale all watermark typography down to keep it on-canvas.
+  const scale=Math.min(1,Math.max(.48,(h*.72)/(needed||1)));
+  const actualRows=measured.map(r=>({...r,size:r.size*scale,lineHeight:r.lineHeight*scale,lines:r.lines}));
+  const total=actualRows.reduce((sum,r)=>sum+r.lines.length*r.lineHeight+gap*scale,top*scale+bottom*scale);
+  const y=Math.max(0,h-total);
+  ctx.fillStyle='rgba(4, 9, 17, 0.86)';ctx.fillRect(0,y,w,h-y);
+  ctx.fillStyle='#2dd4bf';ctx.fillRect(0,y,w,Math.max(3,small*.005));
+  let cy=y+top*scale;
+  for(const row of actualRows){
+    ctx.font=`${row.bold?'750':'500'} ${row.size}px system-ui, sans-serif`;ctx.fillStyle=row.color||'#f8fafc';
+    for(const line of row.lines){ctx.fillText(line,pad*scale,cy+row.size*.88,maxW*1);cy+=row.lineHeight;}
+    cy+=gap*scale;
+  }
+  ctx.save();ctx.globalAlpha=.62;ctx.fillStyle='#cbd5e1';ctx.font=`600 ${Math.max(9,body*.62*scale)}px system-ui, sans-serif`;ctx.textAlign='right';ctx.fillText('Built by Sanjay',w-pad*scale,h-Math.max(5,pad*.25*scale));ctx.restore();
+}
+async function decodeImage(file){
+  if('createImageBitmap' in window){try{return await createImageBitmap(file,{imageOrientation:'from-image'});}catch(_){try{return await createImageBitmap(file);}catch(__){}}}
+  return new Promise((resolve,reject)=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>reject(new Error('This image could not be opened. Try another photo.'));img.src=state.sourceUrl;});
+}
+async function createTaggedJpeg(){
+  if(!state.sourceUrl)throw new Error('Take a photo before saving.');
+  const response=await fetch(state.sourceUrl);const file=await response.blob();const bitmap=await decodeImage(file);
+  try{
+    let w=bitmap.width,h=bitmap.height;
+    // Bound very large phone photos to reduce memory use while keeping aspect ratio.
+    const max=2560;const scale=Math.min(1,max/Math.max(w,h));w=Math.max(1,Math.round(w*scale));h=Math.max(1,Math.round(h*scale));
+    const canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
+    const ctx=canvas.getContext('2d',{alpha:false});if(!ctx)throw new Error('Canvas processing is unavailable in this browser.');
+    ctx.drawImage(bitmap,0,0,w,h);drawWatermark(ctx,w,h);
+    const blob=await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error('Could not encode the image. Try a smaller photo.')),'image/jpeg',.93));
+    canvas.width=canvas.height=1;return blob;
+  }finally{if(typeof bitmap.close==='function')bitmap.close();}
+}
+function download(blob,name){const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;a.style.display='none';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2000);notify('Download started. Check your browser downloads; on iPhone, open the image and use Share → Save Image if needed.',6500);}
+async function save(){
+  if(state.busy||!state.sourceUrl)return;const now=Date.now();if(now-state.lastAction<1000)return;state.lastAction=now;state.busy=true;const btn=$('savePhoto');btn.disabled=true;btn.textContent='⏳ Preparing…';vibrate();
+  try{
+    const blob=await createTaggedJpeg();const date=state.captureTime||new Date();const name=filename(date,state.area);const file=new File([blob],name,{type:'image/jpeg',lastModified:date.getTime()});
+    if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
+      notify('Share sheet opening. On iPhone, choose Save Image to add it to Photos.',6000);
+      try{await navigator.share({files:[file],title:'GPS Photo Tagger',text:'GPS-tagged photograph'});notify('Share sheet closed. The image is saved only if you chose a destination such as Save Image.',5000);}
+      catch(e){if(e?.name==='AbortError')notify('Sharing cancelled. Tap Save Tagged Photo again to try the download fallback.');else download(blob,name);}
+    }else download(blob,name);
+  }catch(e){notify(e?.message||'Photo export failed. Please try again.',5000);}
+  finally{state.busy=false;btn.disabled=!state.sourceUrl;btn.textContent='⬇️ Save Tagged Photo';}
+}
+$('takePhoto').addEventListener('click',()=>{vibrate();getGps();input.click();});
+$('chooseExisting').addEventListener('click',()=>input.click());
+$('getGps').addEventListener('click',()=>{vibrate();getGps();});
+$('savePhoto').addEventListener('click',save);
+$('takeAnother').addEventListener('click',()=>{clearPhoto();input.value='';input.click();});
+input.addEventListener('change',e=>{const file=e.target.files?.[0];if(file)onFile(file);});
+window.addEventListener('online',()=>{if(state.position)lookupArea(state.position);});
+window.addEventListener('beforeunload',releaseSource);
+})();
+</script>
+</body>
+</html>
